@@ -1,0 +1,18 @@
+version: '3'
+services:
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3-management
+    ports: 
+      - 5674:5672
+      - 15674:15672
+
+  meter:
+    container_name: meter
+    build: .
+    command: python pvsimulator/app.py start-meter -b rabbit -p 5672 -q raw -u guest -x guest
+
+  simulator:
+    container_name: simulator
+    build: .
+    command: python pvsimulator/app.py start-simulator -b rabbit -p 5672 -q raw -u guest -x guest
